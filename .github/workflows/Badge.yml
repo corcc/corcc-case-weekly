@@ -1,0 +1,57 @@
+on: 
+  workflow_call:
+    inputs:
+      prev:
+        type: string
+        default: '[ "plain" ]'
+      which: 
+        type: string
+        default: '[ { "text": "case", "emoji": "🦠" } ]'
+  workflow_dispatch:
+    inputs:
+      prev:
+        type: string
+        default: '[ "" ]'
+      which: 
+        type: string
+        default: '[ { "text": "case", "emoji": "🦠" } ]'
+jobs:
+  badge:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        which: ${{ fromJson((github.event.inputs || inputs).which) }}
+        prev: ${{ fromJson((github.event.inputs || inputs).prev) }}
+    timeout-minutes: 2
+    steps:
+    - uses: actions/checkout@master
+    - uses: pnpm/action-setup@master
+      with:
+        version: latest
+    - uses: actions/setup-node@main
+      with:
+        node-version: 16
+        cache: 'pnpm'
+    - run: pnpm install --no-frozen-lockfile
+    - uses: actions/download-artifact@v2
+      if: ${{ matrix.prev != '' }}
+      with:
+        name: artifact-${{ matrix.which.text }}
+        path: ./
+    - if: ${{ matrix.prev != '' }}
+      run: |
+        mkdir -p data/
+        mv fetch-${{ matrix.which.text }}.tar.gz ./data/
+        cd data
+        tar -zxvf fetch-${{ matrix.which.text }}.tar.gz
+    - run: pnpm badge:${{ matrix.which.text }}
+    - run: tar -zcvf badge-${{ matrix.which.text }}.tar.gz ./badge/*
+    - uses: actions/upload-artifact@v2
+      with:
+        name: artifact-${{ matrix.which.text }}
+        path: badge-${{ matrix.which.text }}.tar.gz
+    - uses: corcc/publish@node
+      with:
+        TZ: 'Asia/Seoul'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        TASK_NAME: ⬆️${{ matrix.which.emoji }}📛

@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "fetch:case": "ts-node run/fetch"
+    "fetch:case": "ts-node run/fetch",
+    "badge:case": "ts-node run/badge"
   },
   "author": "",
   "license": "WTFPL",
   "dependencies": {
     "@corcc/request": "github:corcc/request#dist",
+    "@taccl/thousands": "github:taccl/thousands",
     "@types/html-parser": "^0.11.5",
     "@types/node-fetch": "2",
+    "badgen": "^3.2.3",
     "node-fetch": "2",
     "node-html-parser": "^6.1.12",
     "ts-node": "^10.9.2",

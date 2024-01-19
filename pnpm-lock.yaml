@@ -8,12 +8,18 @@ dependencies:
   '@corcc/request':
     specifier: github:corcc/request#dist
     version: github.com/corcc/request/e7a4a4a3942bd7178506051601e6d8ddd27a68ce
+  '@taccl/thousands':
+    specifier: github:taccl/thousands
+    version: github.com/taccl/thousands/25a1df1391bafd0ae7597d9916d5765d7d6fbb8e
   '@types/html-parser':
     specifier: ^0.11.5
     version: 0.11.5
   '@types/node-fetch':
     specifier: '2'
     version: 2.6.11
+  badgen:
+    specifier: ^3.2.3
+    version: 3.2.3
   node-fetch:
     specifier: '2'
     version: 2.7.0
@@ -113,6 +119,10 @@ packages:
 
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
+    dev: false
+
+  /badgen@3.2.3:
+    resolution: {integrity: sha512-svDuwkc63E/z0ky3drpUppB83s/nlgDciH9m+STwwQoWyq7yCgew1qEfJ+9axkKdNq7MskByptWUN9j1PGMwFA==}
     dev: false
 
   /boolbase@1.0.0:
@@ -339,6 +349,13 @@ packages:
       webidl-conversions: 3.0.1
     dev: false
 
+  /yarn@1.22.21:
+    resolution: {integrity: sha512-ynXaJsADJ9JiZ84zU25XkPGOvVMmZ5b7tmTSpKURYwgELdjucAOydqIOrOfTxVYcNXe91xvLZwcRh68SR3liCg==}
+    engines: {node: '>=4.0.0'}
+    hasBin: true
+    requiresBuild: true
+    dev: false
+
   /yn@3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
@@ -381,6 +398,21 @@ packages:
       '@types/node': 17.0.45
       ts-node: 10.9.2(@types/node@17.0.45)(typescript@4.9.5)
       typescript: 4.9.5
+    transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+    dev: false
+
+  github.com/taccl/thousands/25a1df1391bafd0ae7597d9916d5765d7d6fbb8e:
+    resolution: {tarball: https://codeload.github.com/taccl/thousands/tar.gz/25a1df1391bafd0ae7597d9916d5765d7d6fbb8e}
+    name: '@taccl/thousands'
+    version: 0.0.0
+    dependencies:
+      '@taccl/package': github.com/taccl/package/184515c1bc6fb27b96058a87af471328342eee5a
+      '@types/node': 17.0.45
+      ts-node: 10.9.2(@types/node@17.0.45)(typescript@4.9.5)
+      typescript: 4.9.5
+      yarn: 1.22.21
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
