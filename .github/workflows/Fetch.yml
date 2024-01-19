@@ -1,0 +1,49 @@
+on: 
+  workflow_call:
+    inputs:
+      which: 
+        type: string
+        default: '[ { "text": "case", "emoji": "🦠" } ]'
+  workflow_dispatch:
+    inputs:
+      which: 
+        type: string
+        default: '[ { "text": "case", "emoji": "🦠" } ]'
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        which: ${{ fromJson((github.event.inputs || inputs).which) }}
+    timeout-minutes: 2
+    steps:
+    - uses: actions/checkout@master
+    - uses: pnpm/action-setup@master
+      with:
+        version: latest
+    - uses: actions/setup-node@main
+      with:
+        node-version: 16
+        cache: 'pnpm'
+    - run: pnpm install --no-frozen-lockfile
+    - run: pnpm fetch:${{ matrix.which.text }}
+    - run: |
+        cd ./artifacts/
+        ls -la ./
+        tar --exclude='*.tar.gz' \
+          -zcvf ../fetch-${{ matrix.which.text }}.tar.gz \
+          ./*
+    - uses: actions/upload-artifact@v2
+      with:
+        name: artifact-${{ matrix.which.text }}
+        path: fetch-${{ matrix.which.text }}.tar.gz
+    - run: |
+        mkdir -p data/
+        mv fetch-${{ matrix.which.text }}.tar.gz ./data/
+        cd data
+        tar -zxvf fetch-${{ matrix.which.text }}.tar.gz
+    - uses: corcc/publish@node
+      with:
+        TZ: 'Asia/Seoul'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        TASK_NAME: ⬆️${{ matrix.which.emoji }}

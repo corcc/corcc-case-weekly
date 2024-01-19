@@ -1,0 +1,13 @@
+on: 
+  workflow_dispatch:
+  push: 
+    paths:
+      - '**.yml'
+  pull_request:
+  schedule:
+    - cron: '0 */1 * * *'
+jobs:
+  fetch:
+    uses: ./.github/workflows/Fetch.yml
+    with:
+      which: '[ { "text": "case", "emoji": "🦠" } ]'
