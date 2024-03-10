@@ -79,7 +79,7 @@ export class Data {
 		const doc = HTMLParser.parse(html);
 		let rtn:Array<Data | undefined> = [];
 		const tables = doc
-			.querySelectorAll('div.hdn > table');
+			.querySelectorAll(' > table');
 		tables.forEach((e) => {
 			const row_keys = HTMLParser.parse(e.innerHTML)
 				.querySelectorAll('thead > tr > th[scope=col]')
@@ -93,7 +93,7 @@ export class Data {
 						.querySelectorAll('td')
 						.map((td)=> (td.innerText.trim()));
 					let p:{[x:string]:string | undefined} = {};
-					p['date'] = row_datas[row_keys.indexOf('날짜')];
+					p['date'] = row_datas[row_keys.indexOf('	')];
 					p['total'] = row_datas[row_keys.indexOf(`${row_keys.filter((k) => (k.includes('누적')))[0]}`)];
 					p['weekly'] = row_datas[row_keys.indexOf(`${row_keys.filter((k)=>(k.includes('주간')))[0]}`)];
 
@@ -113,6 +113,52 @@ export class Data {
 			rtn.push(new Data(row_datas_arr));
 		});
 		return rtn;
+	}
+
+	static fromJSON(json:string): Array<Data | undefined>{
+		/**
+		 * value: {
+		 *  label: "누적 양성자" | "주간 양성자"
+		 *  yAxisId: "yLeftId" | "yRightId"
+		 *  value : {
+		 *   yaxis: number (Pls change to ${NUMBER}n to parse as BigInt
+		 *                  , or use "${VALUE}" as String
+		 *                  , this value can be larger than Number() range
+		 *                  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number  )
+		 *   xaxis: "{number}.{number}. ~ {number}.{number}." (It seems like meaning date range of yaxis value)
+		 *  }[]
+		 * }[]
+		 *  
+		 */
+		const data = JSON.parse(json);
+		let rtn:any = [];
+		data.value.forEach((value1:any)=>{
+			let name = '';
+			if(value1.label.startsWith('누적')){ name = 'total'; }
+			if(value1.label.startsWith('주간')){ name = 'weekly'; }
+			value1.value.forEach((value2:any)=>{
+				let i = -1;
+				rtn.forEach((r:any,index:number,arr:Array<any>) => {
+					if(		
+						r.date.start == (new DateData(value2.xaxis)).start &&
+						r.date.end == (new DateData(value2.xaxis)).end
+					){
+						i = index;
+					}
+				});
+				if(i != -1){
+					rtn[i][name] = value2.yaxis.toString();
+				} else {
+					i = rtn.length;
+					rtn[i] = {
+						date: new DateData(value2.xaxis)
+					};
+					rtn[i][name] = value2.yaxis.toString();
+
+				}
+			})
+		});
+		return [new Data(rtn)];
 	}
 
 	toString(){

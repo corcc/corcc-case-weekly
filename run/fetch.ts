@@ -4,8 +4,8 @@ import * as Save from '../src/save';
 
 async function __main__(){
 	const res = await Fetch.fetchBoardListR();
-	const html = await res.text();
-	const data = Type.Data.fromHtml(html);
+	const json = await res.text();
+	const data = Type.Data.fromJSON(json);
 	Save.recursiveSave(data[0]);
 	Save.latestSave(data[0]?.datas?.sort((a,b) => (
 		Date.parse(`${b?.date?.end}`) - Date.parse(`${a?.date?.end}`)

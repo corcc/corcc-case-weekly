@@ -30,8 +30,8 @@ export function recursiveSave(data:Type.Data | undefined){
 				console.error(e);
 			}
 			console.log(path);
-			console.log(positiveData.toString());
-			FS.writeFileSync(path,positiveData.toString());
+			console.log(JSON.stringify(positiveData));
+			FS.writeFileSync(path,JSON.stringify(positiveData));
 		}
 	});
 }
@@ -44,6 +44,6 @@ export function latestSave(positiveData:Type.PositiveData | undefined){
 		console.error(e);
 	}
 	console.log(path);
-	console.log(positiveData!.toString());
-	FS.writeFileSync(path,positiveData!.toString());
+	console.log(JSON.stringify(positiveData));
+	FS.writeFileSync(path,JSON.stringify(positiveData));
 }
